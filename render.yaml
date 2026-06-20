@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: c-openhab-rest-client-backend
+    runtime: docker
+    branch: main
+    region: frankfurt
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8080
