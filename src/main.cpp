@@ -1,308 +1,198 @@
+// Backend of the c-openhab-rest-client test app: makes every function of the C library
+// callable over HTTP. The browser sends the openHAB address, the credentials, the class
+// and method name of python-openhab-rest-client and the arguments as JSON object.
+//
+//   GET  /                     health check (wake-up on Render)
+//   GET  /api/methods          all functions with parameters (methods.json)
+//   POST /api/connect          {url, token | username+password}
+//   POST /api/call             {url, token, ..., class, method, args: {...}}
+//   GET  /api/events/stream    ?url&token&...&class&method&args=<json>  (Server-Sent Events)
 #include "httplib.h"
-#include <nlohmann/json.hpp>
-#include <string>
+
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
+#include <iostream>
+#include <memory>
+#include <sstream>
+#include <string>
 
 extern "C" {
-#include "openhab/openhab.h"
+#include <openhab/openhab.h>
+#include "calls.h"
 }
 
-using json = nlohmann::json;
+namespace {
 
-// ── CORS ─────────────────────────────────────────────────────────────────────
-static void setCORS(httplib::Response& res) {
-    res.set_header("Access-Control-Allow-Origin",  "*");
-    res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.set_header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.set_header("Access-Control-Max-Age",       "3600");
+struct JsonDeleter { void operator()(cJSON* j) const { cJSON_Delete(j); } };
+using Json = std::unique_ptr<cJSON, JsonDeleter>;
+struct ClientDeleter { void operator()(openhab_client_t* c) const { openhab_client_destroy(c); } };
+using Client = std::unique_ptr<openhab_client_t, ClientDeleter>;
+
+std::string methodsJson;
+
+void setCORS(httplib::Response& res) {
+    res.set_header("Access-Control-Allow-Origin", "*");
+    res.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.set_header("Access-Control-Allow-Headers", "Content-Type");
+    res.set_header("Access-Control-Max-Age", "3600");
 }
 
-// ── Response helpers ──────────────────────────────────────────────────────────
-static void ok(httplib::Response& res, char* result, openhab_client_t* c) {
+void sendJson(httplib::Response& res, const cJSON* value, int status = 200) {
     setCORS(res);
-    if (result) {
-        res.set_content(result, "application/json");
-        free(result);
-    } else {
-        res.status = 502;
-        const char* err = openhab_last_error(c);
-        json j = {{"error", err ? err : "unknown error"},
-                  {"status", openhab_last_status(c)}};
-        res.set_content(j.dump(), "application/json");
-    }
+    res.status = status;
+    char* text = openhab_json_print(value);
+    res.set_content(text ? text : "null", "application/json");
+    openhab_free(text);
 }
 
-static void ok_json(httplib::Response& res, const json& j) {
-    setCORS(res);
-    res.set_content(j.dump(), "application/json");
+void sendError(httplib::Response& res, const std::string& msg, int status) {
+    Json j(cJSON_CreateObject());
+    cJSON_AddStringToObject(j.get(), "error", msg.c_str());
+    sendJson(res, j.get(), status);
 }
 
-static void err_res(httplib::Response& res, const std::string& msg, int code = 502) {
-    setCORS(res);
-    res.status = code;
-    res.set_content(json{{"error", msg}}.dump(), "application/json");
+const char* str(const cJSON* o, const char* key) {
+    const cJSON* v = cJSON_GetObjectItemCaseSensitive(o, key);
+    return cJSON_IsString(v) && *v->valuestring ? v->valuestring : nullptr;
 }
 
-// ── Client factory ────────────────────────────────────────────────────────────
-static openhab_client_t* makeClient(const httplib::Request& req) {
-    try {
-        auto b = json::parse(req.body);
-        std::string url      = b.contains("url")      && b["url"].is_string()      ? b["url"].get<std::string>()      : "https://myopenhab.org";
-        std::string username = b.contains("username") && b["username"].is_string() ? b["username"].get<std::string>() : "";
-        std::string password = b.contains("password") && b["password"].is_string() ? b["password"].get<std::string>() : "";
-        std::string token    = b.contains("token")    && b["token"].is_string()    ? b["token"].get<std::string>()    : "";
-        return openhab_client_create(
-            url.c_str(),
-            username.empty() ? nullptr : username.c_str(),
-            password.empty() ? nullptr : password.c_str(),
-            token.empty()    ? nullptr : token.c_str());
-    } catch (...) {
-        return nullptr;
-    }
+// Client from url/token/username/password; the constructor checks the connection.
+Client makeClient(const char* url, const char* token, const char* user, const char* pass) {
+    openhab_client_args a{};
+    a.token = token;
+    a.username = user;
+    a.password = pass;
+    return Client(openhab_client_new_(url ? url : "https://myopenhab.org", a));
 }
 
-static std::string bodyStr(const httplib::Request& req) {
-    try {
-        auto b = json::parse(req.body);
-        if (b.contains("body") && b["body"].is_string())
-            return b["body"].get<std::string>();
-    } catch (...) {}
-    return "";
+Client makeClient(const cJSON* body) {
+    return makeClient(str(body, "url"), str(body, "token"), str(body, "username"),
+                      str(body, "password"));
 }
 
-static std::string paramStr(const httplib::Request& req, const std::string& key,
-                             const std::string& def = "") {
-    try {
-        auto b = json::parse(req.body);
-        if (b.contains("params") && !b["params"].is_null() &&
-            b["params"].contains(key) && b["params"][key].is_string())
-            return b["params"][key].get<std::string>();
-    } catch (...) {}
-    return def;
+std::string param(const httplib::Request& req, const char* key) {
+    return req.has_param(key) ? req.get_param_value(key) : std::string();
 }
 
-// ── Macro for simple POST endpoints ──────────────────────────────────────────
-#define ROUTE(path, expr) \
-    svr.Post(path, [](const httplib::Request& req, httplib::Response& res) { \
-        auto* c = makeClient(req); \
-        if (!c) { err_res(res, "Failed to create client"); return; } \
-        ok(res, expr, c); \
-        openhab_client_destroy(c); \
-    })
+const char* orNull(const std::string& s) { return s.empty() ? nullptr : s.c_str(); }
+
+}  // namespace
 
 int main() {
+    std::ifstream f("methods.json");
+    std::stringstream ss;
+    ss << f.rdbuf();
+    methodsJson = ss.str().empty() ? "[]" : ss.str();
+
     httplib::Server svr;
 
-    // CORS preflight
     svr.Options(".*", [](const httplib::Request&, httplib::Response& res) {
         setCORS(res);
         res.status = 204;
     });
 
-    // Healthcheck
     svr.Get("/", [](const httplib::Request&, httplib::Response& res) {
         setCORS(res);
-        res.set_content(R"({"status":"ok","library":"c-openhab-rest-client"})", "application/json");
+        res.set_content(std::string(R"({"status":"ok","library":"c-openhab-rest-client","version":")")
+                        + OPENHAB_CLIENT_VERSION + "\"}", "application/json");
     });
 
-    // ── Connect ───────────────────────────────────────────────────────────────
+    svr.Get("/api/methods", [](const httplib::Request&, httplib::Response& res) {
+        setCORS(res);
+        res.set_content(methodsJson, "application/json");
+    });
+
     svr.Post("/api/connect", [](const httplib::Request& req, httplib::Response& res) {
-        auto* c = makeClient(req);
-        if (!c) { err_res(res, "Failed to create client"); return; }
-        ok_json(res, {
-            {"loggedIn", (bool)openhab_client_is_logged_in(c)},
-            {"isCloud",  (bool)openhab_client_is_cloud(c)},
-            {"url",      openhab_client_base_url(c)}
-        });
-        openhab_client_destroy(c);
+        Json body(cJSON_Parse(req.body.c_str()));
+        if (!cJSON_IsObject(body.get())) return sendError(res, "Invalid JSON body", 400);
+        Client c = makeClient(body.get());
+        if (!c) return sendError(res, "Out of memory", 500);
+        Json j(cJSON_CreateObject());
+        cJSON_AddBoolToObject(j.get(), "loggedIn", openhab_client_is_logged_in(c.get()));
+        cJSON_AddBoolToObject(j.get(), "isCloud", openhab_client_is_cloud(c.get()));
+        cJSON_AddStringToObject(j.get(), "url", openhab_client_base_url(c.get()));
+        if (const char* e = openhab_client_last_error(c.get()))
+            cJSON_AddStringToObject(j.get(), "error", e);
+        sendJson(res, j.get());
     });
 
-    // ── UUID + Systeminfo ─────────────────────────────────────────────────────
-    ROUTE("/api/uuid",           openhab_uuid_getUUID(c));
-    ROUTE("/api/systeminfo",     openhab_systeminfo_getSystemInfo(c));
-    ROUTE("/api/systeminfo/uom", openhab_systeminfo_getUoMInfo(c));
+    svr.Post("/api/call", [](const httplib::Request& req, httplib::Response& res) {
+        Json body(cJSON_Parse(req.body.c_str()));
+        if (!cJSON_IsObject(body.get())) return sendError(res, "Invalid JSON body", 400);
+        const char* cls = str(body.get(), "class");
+        const char* method = str(body.get(), "method");
+        if (!cls || !method) return sendError(res, "class and method are required", 400);
+        const cJSON* args = cJSON_GetObjectItemCaseSensitive(body.get(), "args");
+        Json empty(cJSON_CreateObject());
+        if (!cJSON_IsObject(args)) args = empty.get();
 
-    // ── Items ─────────────────────────────────────────────────────────────────
-    ROUTE("/api/items",                openhab_items_getItems(c,nullptr,nullptr,nullptr,0,nullptr,0,nullptr));
-    ROUTE("/api/items/metadata/purge", openhab_items_purgeOrphanedMetadata(c));
-
-    svr.Post("/api/items/([^/]+)/state/update", [](const httplib::Request& req, httplib::Response& res) {
-        auto* c = makeClient(req); if (!c){err_res(res,"client");return;}
-        ok(res, openhab_items_updateItemState(c, req.matches[1].str().c_str(), bodyStr(req).c_str(), nullptr), c);
-        openhab_client_destroy(c);
-    });
-    svr.Post("/api/items/([^/]+)/command", [](const httplib::Request& req, httplib::Response& res) {
-        auto* c = makeClient(req); if (!c){err_res(res,"client");return;}
-        ok(res, openhab_items_sendCommand(c, req.matches[1].str().c_str(), bodyStr(req).c_str()), c);
-        openhab_client_destroy(c);
-    });
-    svr.Post("/api/items/([^/]+)/delete", [](const httplib::Request& req, httplib::Response& res) {
-        auto* c = makeClient(req); if (!c){err_res(res,"client");return;}
-        ok(res, openhab_items_deleteItem(c, req.matches[1].str().c_str()), c);
-        openhab_client_destroy(c);
-    });
-    svr.Post("/api/items/([^/]+)/state", [](const httplib::Request& req, httplib::Response& res) {
-        auto* c = makeClient(req); if (!c){err_res(res,"client");return;}
-        ok(res, openhab_items_getItemState(c, req.matches[1].str().c_str()), c);
-        openhab_client_destroy(c);
-    });
-    svr.Post("/api/items/([^/]+)/tags/([^/]+)/add", [](const httplib::Request& req, httplib::Response& res) {
-        auto* c = makeClient(req); if (!c){err_res(res,"client");return;}
-        ok(res, openhab_items_addTag(c, req.matches[1].str().c_str(), req.matches[2].str().c_str()), c);
-        openhab_client_destroy(c);
-    });
-    svr.Post("/api/items/([^/]+)/tags/([^/]+)/remove", [](const httplib::Request& req, httplib::Response& res) {
-        auto* c = makeClient(req); if (!c){err_res(res,"client");return;}
-        ok(res, openhab_items_removeTag(c, req.matches[1].str().c_str(), req.matches[2].str().c_str()), c);
-        openhab_client_destroy(c);
-    });
-    svr.Post("/api/items/([^/]+)/members/([^/]+)/add", [](const httplib::Request& req, httplib::Response& res) {
-        auto* c = makeClient(req); if (!c){err_res(res,"client");return;}
-        ok(res, openhab_items_addGroupMember(c, req.matches[1].str().c_str(), req.matches[2].str().c_str()), c);
-        openhab_client_destroy(c);
-    });
-    svr.Post("/api/items/([^/]+)/members/([^/]+)/remove", [](const httplib::Request& req, httplib::Response& res) {
-        auto* c = makeClient(req); if (!c){err_res(res,"client");return;}
-        ok(res, openhab_items_removeGroupMember(c, req.matches[1].str().c_str(), req.matches[2].str().c_str()), c);
-        openhab_client_destroy(c);
-    });
-    svr.Post("/api/items/([^/]+)/metadata/namespaces", [](const httplib::Request& req, httplib::Response& res) {
-        auto* c = makeClient(req); if (!c){err_res(res,"client");return;}
-        ok(res, openhab_items_getMetadataNamespaces(c, req.matches[1].str().c_str(), nullptr), c);
-        openhab_client_destroy(c);
-    });
-    svr.Post("/api/items/([^/]+)", [](const httplib::Request& req, httplib::Response& res) {
-        auto* c = makeClient(req); if (!c){err_res(res,"client");return;}
-        ok(res, openhab_items_getItem(c, req.matches[1].str().c_str(), nullptr, 1, nullptr), c);
-        openhab_client_destroy(c);
+        Client c = makeClient(body.get());
+        if (!c) return sendError(res, "Out of memory", 500);
+        Json result(openhab_call(c.get(), cls, method, args));
+        if (!result)
+            return sendError(res, std::string("Unknown function ") + cls + "." + method, 400);
+        sendJson(res, result.get());
     });
 
-    // ── Things ────────────────────────────────────────────────────────────────
-    ROUTE("/api/things", openhab_things_getThings(c,0,0,nullptr));
-    svr.Post("/api/things/([^/]+)/status",   [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_things_getThingStatus(c,req.matches[1].str().c_str(),nullptr),c); openhab_client_destroy(c); });
-    svr.Post("/api/things/([^/]+)/enable",   [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_things_setThingStatus(c,req.matches[1].str().c_str(),1,nullptr),c); openhab_client_destroy(c); });
-    svr.Post("/api/things/([^/]+)/disable",  [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_things_setThingStatus(c,req.matches[1].str().c_str(),0,nullptr),c); openhab_client_destroy(c); });
-    svr.Post("/api/things/([^/]+)/delete",   [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_things_deleteThing(c,req.matches[1].str().c_str(),0,nullptr),c); openhab_client_destroy(c); });
-    svr.Post("/api/things/([^/]+)/firmwares",[](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_things_getThingFirmwares(c,req.matches[1].str().c_str(),nullptr),c); openhab_client_destroy(c); });
-    svr.Post("/api/things/([^/]+)",          [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_things_getThing(c,req.matches[1].str().c_str(),nullptr),c); openhab_client_destroy(c); });
+    // Event stream: the C library reads openHAB, the backend forwards every event.
+    svr.Get("/api/events/stream", [](const httplib::Request& req, httplib::Response& res) {
+        setCORS(res);
+        std::string cls = param(req, "class"), method = param(req, "method");
+        if (cls.empty()) { cls = "Events"; method = "getEvents"; }
+        Json args(cJSON_Parse(param(req, "args").c_str()));
+        if (!cJSON_IsObject(args.get())) args.reset(cJSON_CreateObject());
+        std::string topics = param(req, "topics");   // version 1.x of the test app
+        if (!topics.empty() && !cJSON_GetObjectItem(args.get(), "topics"))
+            cJSON_AddStringToObject(args.get(), "topics", topics.c_str());
 
-    // ── Rules ─────────────────────────────────────────────────────────────────
-    ROUTE("/api/rules", openhab_rules_getRules(c,nullptr,nullptr,0,0));
-    svr.Post("/api/rules/([^/]+)/enable",    [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_rules_setRuleState(c,req.matches[1].str().c_str(),1),c); openhab_client_destroy(c); });
-    svr.Post("/api/rules/([^/]+)/disable",   [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_rules_setRuleState(c,req.matches[1].str().c_str(),0),c); openhab_client_destroy(c); });
-    svr.Post("/api/rules/([^/]+)/runnow",    [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_rules_runNow(c,req.matches[1].str().c_str(),nullptr),c); openhab_client_destroy(c); });
-    svr.Post("/api/rules/([^/]+)/delete",    [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_rules_deleteRule(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-    svr.Post("/api/rules/([^/]+)/actions",   [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_rules_getActions(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-    svr.Post("/api/rules/([^/]+)/triggers",  [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_rules_getTriggers(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-    svr.Post("/api/rules/([^/]+)/conditions",[](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_rules_getConditions(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-    svr.Post("/api/rules/([^/]+)",           [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_rules_getRule(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-
-    // ── Addons ────────────────────────────────────────────────────────────────
-    ROUTE("/api/addons",             openhab_addons_getAddons(c,nullptr,nullptr));
-    ROUTE("/api/addons/types",       openhab_addons_getAddonTypes(c,nullptr));
-    ROUTE("/api/addons/suggestions", openhab_addons_getAddonSuggestions(c,nullptr));
-    ROUTE("/api/addons/services",    openhab_addons_getAddonServices(c,nullptr));
-    svr.Post("/api/addons/([^/]+)/install",   [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_addons_installAddon(c,req.matches[1].str().c_str(),nullptr),c); openhab_client_destroy(c); });
-    svr.Post("/api/addons/([^/]+)/uninstall", [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_addons_uninstallAddon(c,req.matches[1].str().c_str(),nullptr),c); openhab_client_destroy(c); });
-    svr.Post("/api/addons/([^/]+)",           [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_addons_getAddon(c,req.matches[1].str().c_str(),nullptr,nullptr),c); openhab_client_destroy(c); });
-
-    // ── Audio ─────────────────────────────────────────────────────────────────
-    ROUTE("/api/audio/defaultsink",   openhab_audio_getDefaultSink(c));
-    ROUTE("/api/audio/defaultsource", openhab_audio_getDefaultSource(c));
-    ROUTE("/api/audio/sinks",         openhab_audio_getSinks(c));
-    ROUTE("/api/audio/sources",       openhab_audio_getSources(c));
-
-    // ── Logging ───────────────────────────────────────────────────────────────
-    ROUTE("/api/logging", openhab_logging_getLoggers(c));
-    svr.Post("/api/logging/([^/]+)/set",    [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} auto level=paramStr(req,"level","INFO"); ok(res,openhab_logging_modifyOrAddLogger(c,req.matches[1].str().c_str(),level.c_str()),c); openhab_client_destroy(c); });
-    svr.Post("/api/logging/([^/]+)/delete", [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_logging_removeLogger(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-    svr.Post("/api/logging/([^/]+)",        [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_logging_getLogger(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-
-    // ── Links / ChannelTypes / ThingTypes / ConfigDescriptions ────────────────
-    ROUTE("/api/links",              openhab_links_getLinks(c,nullptr,nullptr));
-    ROUTE("/api/links/orphan",       openhab_links_getOrphanLinks(c));
-    ROUTE("/api/channel-types",      openhab_channel_types_getChannelTypes(c,nullptr,nullptr));
-    ROUTE("/api/thing-types",        openhab_thing_types_getThingTypes(c,nullptr,nullptr));
-    ROUTE("/api/config-descriptions",openhab_config_descriptions_getConfigDescriptions(c,nullptr,nullptr));
-
-    // ── Persistence ───────────────────────────────────────────────────────────
-    ROUTE("/api/persistence",       openhab_persistence_getServices(c));
-    ROUTE("/api/persistence/items", openhab_persistence_getItemsFromService(c,nullptr));
-    svr.Post("/api/persistence/items/([^/]+)", [](const httplib::Request& req, httplib::Response& res) {
-        auto* c=makeClient(req); if(!c){err_res(res,"client");return;}
-        auto svc=paramStr(req,"serviceId","");
-        ok(res,openhab_persistence_getItemPersistenceData(c,req.matches[1].str().c_str(),
-           svc.empty()?nullptr:svc.c_str(),nullptr,nullptr,0,0,0),c);
-        openhab_client_destroy(c);
+        std::string url = param(req, "url"), token = param(req, "token"),
+                    user = param(req, "username"), pass = param(req, "password");
+        auto client = std::make_shared<Client>(
+            makeClient(orNull(url), orNull(token), orNull(user), orNull(pass)));
+        openhab_sse_t* s = openhab_open_stream(client->get(), cls.c_str(), method.c_str(),
+                                               args.get());
+        if (!s) return sendError(res, "Unknown event stream " + cls + "." + method, 400);
+        if (openhab_sse_is_error(s)) {
+            Json e(openhab_sse_error_result(s));
+            openhab_sse_close(s);
+            return sendJson(res, e.get(), 502);
+        }
+        res.set_header("Cache-Control", "no-cache");
+        res.set_chunked_content_provider(
+            "text/event-stream",
+            [s](size_t, httplib::DataSink& sink) {
+                // wait up to 15 s; ALIVE messages keep the connection to the browser open
+                Json ev(openhab_sse_next_event(s, 15000, 1));
+                std::string chunk;
+                if (ev) {
+                    char* text = openhab_json_print(ev.get());
+                    chunk = std::string("data: ") + text + "\n\n";
+                    openhab_free(text);
+                } else if (openhab_sse_is_open(s)) {
+                    chunk = ": keep-alive\n\n";
+                } else {
+                    Json e(openhab_sse_error_result(s));
+                    if (e) {
+                        char* text = openhab_json_print(e.get());
+                        std::string msg = std::string("event: error\ndata: ") + text + "\n\n";
+                        sink.write(msg.data(), msg.size());
+                        openhab_free(text);
+                    }
+                    sink.done();
+                    return true;
+                }
+                return sink.write(chunk.data(), chunk.size());
+            },
+            [s, client](bool) { openhab_sse_close(s); });
     });
 
-    // ── Discovery + Inbox ─────────────────────────────────────────────────────
-    ROUTE("/api/discovery", openhab_discovery_getDiscoveryBindings(c));
-    svr.Post("/api/discovery/([^/]+)/scan", [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_discovery_startBindingScan(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-    ROUTE("/api/inbox", openhab_inbox_getDiscoveredThings(c));
-    svr.Post("/api/inbox/([^/]+)/approve",  [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_inbox_approveDiscoveryResult(c,req.matches[1].str().c_str(),bodyStr(req).c_str(),nullptr),c); openhab_client_destroy(c); });
-    svr.Post("/api/inbox/([^/]+)/ignore",   [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_inbox_ignoreDiscoveryResult(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-    svr.Post("/api/inbox/([^/]+)/unignore", [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_inbox_unignoreDiscoveryResult(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-    svr.Post("/api/inbox/([^/]+)/delete",   [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_inbox_removeDiscoveryResult(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-
-    // ── Sitemaps ──────────────────────────────────────────────────────────────
-    ROUTE("/api/sitemaps", openhab_sitemaps_getSitemaps(c));
-    svr.Post("/api/sitemaps/([^/]+)/([^/]+)", [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_sitemaps_getSitemapPage(c,req.matches[1].str().c_str(),req.matches[2].str().c_str(),nullptr,0,nullptr),c); openhab_client_destroy(c); });
-    svr.Post("/api/sitemaps/([^/]+)",         [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_sitemaps_getSitemap(c,req.matches[1].str().c_str(),nullptr,0,nullptr),c); openhab_client_destroy(c); });
-
-    // ── Tags / Templates / ModuleTypes / ProfileTypes ─────────────────────────
-    ROUTE("/api/tags",         openhab_tags_getTags(c,nullptr,nullptr));
-    svr.Post("/api/tags/([^/]+)/delete", [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_tags_deleteTag(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-    svr.Post("/api/tags/([^/]+)",        [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_tags_getTag(c,req.matches[1].str().c_str(),nullptr),c); openhab_client_destroy(c); });
-    ROUTE("/api/templates",    openhab_templates_getTemplates(c,nullptr));
-    ROUTE("/api/module-types", openhab_module_types_getModuleTypes(c,nullptr,nullptr));
-    ROUTE("/api/profile-types",openhab_profile_types_getProfileTypes(c,nullptr,nullptr,nullptr));
-
-    // ── Transformations ───────────────────────────────────────────────────────
-    ROUTE("/api/transformations",          openhab_transformations_getTransformations(c));
-    ROUTE("/api/transformations/services", openhab_transformations_getTransformationServices(c));
-    svr.Post("/api/transformations/([^/]+)/delete", [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_transformations_deleteTransformation(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-    svr.Post("/api/transformations/([^/]+)",        [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_transformations_getTransformation(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-
-    // ── UI / Services / Iconsets ──────────────────────────────────────────────
-    ROUTE("/api/ui/tiles",    openhab_ui_getUITiles(c));
-    svr.Post("/api/ui/components/([^/]+)", [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_ui_getUIComponents(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-    ROUTE("/api/services",    openhab_services_getServices(c,nullptr));
-    svr.Post("/api/services/([^/]+)/config", [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_services_getServiceConfig(c,req.matches[1].str().c_str()),c); openhab_client_destroy(c); });
-    svr.Post("/api/services/([^/]+)",        [](const httplib::Request& req, httplib::Response& res) { auto* c=makeClient(req); if(!c){err_res(res,"client");return;} ok(res,openhab_services_getService(c,req.matches[1].str().c_str(),nullptr),c); openhab_client_destroy(c); });
-    ROUTE("/api/iconsets",    openhab_iconsets_getIconsets(c,nullptr));
-
-    // ── Auth ──────────────────────────────────────────────────────────────────
-    ROUTE("/api/auth/apitokens", openhab_auth_getAPITokens(c));
-    ROUTE("/api/auth/sessions",  openhab_auth_getSessions(c));
-
-    // ── Voice ─────────────────────────────────────────────────────────────────
-    ROUTE("/api/voice/voices",       openhab_voice_getVoices(c));
-    ROUTE("/api/voice/defaultvoice", openhab_voice_getDefaultVoice(c));
-    ROUTE("/api/voice/interpreters", openhab_voice_getInterpreters(c,nullptr));
-    svr.Post("/api/voice/say", [](const httplib::Request& req, httplib::Response& res) {
-        auto* c=makeClient(req); if(!c){err_res(res,"client");return;}
-        ok(res,openhab_voice_sayText(c,bodyStr(req).c_str(),nullptr,nullptr,-1),c);
-        openhab_client_destroy(c);
-    });
-
-    // ── Actions ───────────────────────────────────────────────────────────────
-    ROUTE("/api/actions", openhab_actions_getActions(c));
-    svr.Post("/api/actions/([^/]+)", [](const httplib::Request& req, httplib::Response& res) {
-        auto* c=makeClient(req); if(!c){err_res(res,"client");return;}
-        ok(res,openhab_actions_getThingActions(c,req.matches[1].str().c_str()),c);
-        openhab_client_destroy(c);
-    });
-
-    // ── Start ─────────────────────────────────────────────────────────────────
     const char* portEnv = std::getenv("PORT");
-    int port = portEnv ? std::stoi(portEnv) : 8080;
-
+    int port = portEnv ? std::atoi(portEnv) : 8080;
     svr.set_read_timeout(30);
     svr.set_write_timeout(30);
-
-    std::cout << "c-openhab-rest-client backend listening on port " << port << std::endl;
+    std::cout << "c-openhab-rest-client " << OPENHAB_CLIENT_VERSION
+              << " backend listening on port " << port << std::endl;
     svr.listen("0.0.0.0", port);
     return 0;
 }

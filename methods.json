@@ -1,0 +1,3479 @@
+[
+ {
+  "class": "Actions",
+  "method": "getActions",
+  "function": "openhab_actions_getActions",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Actions",
+  "method": "executeAction",
+  "function": "openhab_actions_executeAction",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "actionUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "actionInputs",
+    "type": "json",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Addons",
+  "method": "getAddons",
+  "function": "openhab_addons_getAddons",
+  "stream": false,
+  "params": [
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Addons",
+  "method": "getAddon",
+  "function": "openhab_addons_getAddon",
+  "stream": false,
+  "params": [
+   {
+    "name": "addonID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Addons",
+  "method": "getAddonConfig",
+  "function": "openhab_addons_getAddonConfig",
+  "stream": false,
+  "params": [
+   {
+    "name": "addonID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Addons",
+  "method": "updateAddonConfig",
+  "function": "openhab_addons_updateAddonConfig",
+  "stream": false,
+  "params": [
+   {
+    "name": "addonID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "configData",
+    "type": "json",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Addons",
+  "method": "installAddon",
+  "function": "openhab_addons_installAddon",
+  "stream": false,
+  "params": [
+   {
+    "name": "addonID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Addons",
+  "method": "uninstallAddon",
+  "function": "openhab_addons_uninstallAddon",
+  "stream": false,
+  "params": [
+   {
+    "name": "addonID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Addons",
+  "method": "getAddonServices",
+  "function": "openhab_addons_getAddonServices",
+  "stream": false,
+  "params": [
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Addons",
+  "method": "getAddonSuggestions",
+  "function": "openhab_addons_getAddonSuggestions",
+  "stream": false,
+  "params": [
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Addons",
+  "method": "getAddonTypes",
+  "function": "openhab_addons_getAddonTypes",
+  "stream": false,
+  "params": [
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Addons",
+  "method": "installAddonFromUrl",
+  "function": "openhab_addons_installAddonFromUrl",
+  "stream": false,
+  "params": [
+   {
+    "name": "url",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Audio",
+  "method": "getDefaultSink",
+  "function": "openhab_audio_getDefaultSink",
+  "stream": false,
+  "params": [
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Audio",
+  "method": "getDefaultSource",
+  "function": "openhab_audio_getDefaultSource",
+  "stream": false,
+  "params": [
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Audio",
+  "method": "getSinks",
+  "function": "openhab_audio_getSinks",
+  "stream": false,
+  "params": [
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Audio",
+  "method": "getSources",
+  "function": "openhab_audio_getSources",
+  "stream": false,
+  "params": [
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Auth",
+  "method": "getAPITokens",
+  "function": "openhab_auth_getAPITokens",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "Auth",
+  "method": "revokeAPIToken",
+  "function": "openhab_auth_revokeAPIToken",
+  "stream": false,
+  "params": [
+   {
+    "name": "tokenName",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Auth",
+  "method": "logout",
+  "function": "openhab_auth_logout",
+  "stream": false,
+  "params": [
+   {
+    "name": "refreshToken",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "sessionID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Auth",
+  "method": "getSessions",
+  "function": "openhab_auth_getSessions",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "Auth",
+  "method": "getToken",
+  "function": "openhab_auth_getToken",
+  "stream": false,
+  "params": [
+   {
+    "name": "useCookie",
+    "type": "bool",
+    "required": false,
+    "default": false
+   },
+   {
+    "name": "grantType",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "code",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "redirectURI",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "clientID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "refreshToken",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "codeVerifier",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "ChannelTypes",
+  "method": "getChannelTypes",
+  "function": "openhab_channel_types_getChannelTypes",
+  "stream": false,
+  "params": [
+   {
+    "name": "prefixes",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "ChannelTypes",
+  "method": "getChannelType",
+  "function": "openhab_channel_types_getChannelType",
+  "stream": false,
+  "params": [
+   {
+    "name": "channelTypeUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "ChannelTypes",
+  "method": "getLinkableItemTypes",
+  "function": "openhab_channel_types_getLinkableItemTypes",
+  "stream": false,
+  "params": [
+   {
+    "name": "channelTypeUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "ConfigDescriptions",
+  "method": "getConfigDescriptions",
+  "function": "openhab_config_descriptions_getConfigDescriptions",
+  "stream": false,
+  "params": [
+   {
+    "name": "scheme",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "ConfigDescriptions",
+  "method": "getConfigDescription",
+  "function": "openhab_config_descriptions_getConfigDescription",
+  "stream": false,
+  "params": [
+   {
+    "name": "uri",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Discovery",
+  "method": "getDiscoveryBindings",
+  "function": "openhab_discovery_getDiscoveryBindings",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "Discovery",
+  "method": "getBindingInfo",
+  "function": "openhab_discovery_getBindingInfo",
+  "stream": false,
+  "params": [
+   {
+    "name": "bindingID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Discovery",
+  "method": "startBindingScan",
+  "function": "openhab_discovery_startBindingScan",
+  "stream": false,
+  "params": [
+   {
+    "name": "bindingID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "input",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Events",
+  "method": "getEvents",
+  "function": "openhab_events_getEvents",
+  "stream": true,
+  "params": [
+   {
+    "name": "topics",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Events",
+  "method": "initiateStateTracker",
+  "function": "openhab_events_initiateStateTracker",
+  "stream": true,
+  "params": []
+ },
+ {
+  "class": "Events",
+  "method": "updateSSEConnectionItems",
+  "function": "openhab_events_updateSSEConnectionItems",
+  "stream": false,
+  "params": [
+   {
+    "name": "connectionID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "items",
+    "type": "json",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "ItemEvents",
+  "method": "ItemEvent",
+  "function": "openhab_item_events_ItemEvent",
+  "stream": true,
+  "params": []
+ },
+ {
+  "class": "ItemEvents",
+  "method": "ItemAddedEvent",
+  "function": "openhab_item_events_ItemAddedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "ItemEvents",
+  "method": "ItemRemovedEvent",
+  "function": "openhab_item_events_ItemRemovedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "ItemEvents",
+  "method": "ItemUpdatedEvent",
+  "function": "openhab_item_events_ItemUpdatedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "ItemEvents",
+  "method": "ItemCommandEvent",
+  "function": "openhab_item_events_ItemCommandEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "ItemEvents",
+  "method": "ItemStateEvent",
+  "function": "openhab_item_events_ItemStateEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "ItemEvents",
+  "method": "ItemStatePredictedEvent",
+  "function": "openhab_item_events_ItemStatePredictedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "ItemEvents",
+  "method": "ItemStateChangedEvent",
+  "function": "openhab_item_events_ItemStateChangedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "ItemEvents",
+  "method": "GroupItemStateChangedEvent",
+  "function": "openhab_item_events_GroupItemStateChangedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   },
+   {
+    "name": "memberName",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "ThingEvents",
+  "method": "ThingAddedEvent",
+  "function": "openhab_thing_events_ThingAddedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "ThingEvents",
+  "method": "ThingRemovedEvent",
+  "function": "openhab_thing_events_ThingRemovedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "ThingEvents",
+  "method": "ThingUpdatedEvent",
+  "function": "openhab_thing_events_ThingUpdatedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "ThingEvents",
+  "method": "ThingStatusInfoEvent",
+  "function": "openhab_thing_events_ThingStatusInfoEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "ThingEvents",
+  "method": "ThingStatusInfoChangedEvent",
+  "function": "openhab_thing_events_ThingStatusInfoChangedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "InboxEvents",
+  "method": "InboxAddedEvent",
+  "function": "openhab_inbox_events_InboxAddedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "InboxEvents",
+  "method": "InboxRemovedEvent",
+  "function": "openhab_inbox_events_InboxRemovedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "InboxEvents",
+  "method": "InboxUpdatedEvent",
+  "function": "openhab_inbox_events_InboxUpdatedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "LinkEvents",
+  "method": "ItemChannelLinkAddedEvent",
+  "function": "openhab_link_events_ItemChannelLinkAddedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   },
+   {
+    "name": "channelUID",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "LinkEvents",
+  "method": "ItemChannelLinkRemovedEvent",
+  "function": "openhab_link_events_ItemChannelLinkRemovedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   },
+   {
+    "name": "channelUID",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "ChannelEvents",
+  "method": "ChannelDescriptionChangedEvent",
+  "function": "openhab_channel_events_ChannelDescriptionChangedEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "channelUID",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "ChannelEvents",
+  "method": "ChannelTriggeredEvent",
+  "function": "openhab_channel_events_ChannelTriggeredEvent",
+  "stream": true,
+  "params": [
+   {
+    "name": "channelUID",
+    "type": "str",
+    "required": false,
+    "default": "*"
+   }
+  ]
+ },
+ {
+  "class": "Iconsets",
+  "method": "getIconsets",
+  "function": "openhab_iconsets_getIconsets",
+  "stream": false,
+  "params": [
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Inbox",
+  "method": "getDiscoveredThings",
+  "function": "openhab_inbox_getDiscoveredThings",
+  "stream": false,
+  "params": [
+   {
+    "name": "includeIgnored",
+    "type": "bool",
+    "required": false,
+    "default": true
+   }
+  ]
+ },
+ {
+  "class": "Inbox",
+  "method": "removeDiscoveryResult",
+  "function": "openhab_inbox_removeDiscoveryResult",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Inbox",
+  "method": "approveDiscoveryResult",
+  "function": "openhab_inbox_approveDiscoveryResult",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "thingLabel",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "newThingID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Inbox",
+  "method": "ignoreDiscoveryResult",
+  "function": "openhab_inbox_ignoreDiscoveryResult",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Inbox",
+  "method": "unignoreDiscoveryResult",
+  "function": "openhab_inbox_unignoreDiscoveryResult",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "getItems",
+  "function": "openhab_items_getItems",
+  "stream": false,
+  "params": [
+   {
+    "name": "type",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "tags",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "metadata",
+    "type": "str",
+    "required": false,
+    "default": ".*"
+   },
+   {
+    "name": "recursive",
+    "type": "bool",
+    "required": false,
+    "default": false
+   },
+   {
+    "name": "fields",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "staticDataOnly",
+    "type": "bool",
+    "required": false,
+    "default": false
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "parents",
+    "type": "bool",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "addOrUpdateItems",
+  "function": "openhab_items_addOrUpdateItems",
+  "stream": false,
+  "params": [
+   {
+    "name": "items",
+    "type": "json",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "getItem",
+  "function": "openhab_items_getItem",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "metadata",
+    "type": "str",
+    "required": false,
+    "default": ".*"
+   },
+   {
+    "name": "recursive",
+    "type": "bool",
+    "required": false,
+    "default": true
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "parents",
+    "type": "bool",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "addOrUpdateItem",
+  "function": "openhab_items_addOrUpdateItem",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "itemData",
+    "type": "json",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "sendCommand",
+  "function": "openhab_items_sendCommand",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "command",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "source",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "postUpdate",
+  "function": "openhab_items_postUpdate",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "state",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "source",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "deleteItem",
+  "function": "openhab_items_deleteItem",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "addGroupMember",
+  "function": "openhab_items_addGroupMember",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "memberItemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "removeGroupMember",
+  "function": "openhab_items_removeGroupMember",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "memberItemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "addMetadata",
+  "function": "openhab_items_addMetadata",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "namespace",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "metadata",
+    "type": "json",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "removeMetadata",
+  "function": "openhab_items_removeMetadata",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "namespace",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "getMetadataNamespaces",
+  "function": "openhab_items_getMetadataNamespaces",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "getSemanticItem",
+  "function": "openhab_items_getSemanticItem",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "semanticClass",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "getItemState",
+  "function": "openhab_items_getItemState",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "updateItemState",
+  "function": "openhab_items_updateItemState",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "state",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "source",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "addTag",
+  "function": "openhab_items_addTag",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "tag",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "removeTag",
+  "function": "openhab_items_removeTag",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "tag",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Items",
+  "method": "purgeOrphanedMetadata",
+  "function": "openhab_items_purgeOrphanedMetadata",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "Links",
+  "method": "getLinks",
+  "function": "openhab_links_getLinks",
+  "stream": false,
+  "params": [
+   {
+    "name": "channelUID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Links",
+  "method": "getLink",
+  "function": "openhab_links_getLink",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "channelUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Links",
+  "method": "linkItemToChannel",
+  "function": "openhab_links_linkItemToChannel",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "channelUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "configuration",
+    "type": "json",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Links",
+  "method": "unlinkItemFromChannel",
+  "function": "openhab_links_unlinkItemFromChannel",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "channelUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Links",
+  "method": "deleteAllLinks",
+  "function": "openhab_links_deleteAllLinks",
+  "stream": false,
+  "params": [
+   {
+    "name": "object",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Links",
+  "method": "getOrphanLinks",
+  "function": "openhab_links_getOrphanLinks",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "Links",
+  "method": "purgeUnusedLinks",
+  "function": "openhab_links_purgeUnusedLinks",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "Logging",
+  "method": "getLoggers",
+  "function": "openhab_logging_getLoggers",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "Logging",
+  "method": "getLogger",
+  "function": "openhab_logging_getLogger",
+  "stream": false,
+  "params": [
+   {
+    "name": "loggerName",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Logging",
+  "method": "modifyOrAddLogger",
+  "function": "openhab_logging_modifyOrAddLogger",
+  "stream": false,
+  "params": [
+   {
+    "name": "loggerName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "level",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Logging",
+  "method": "removeLogger",
+  "function": "openhab_logging_removeLogger",
+  "stream": false,
+  "params": [
+   {
+    "name": "loggerName",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "ModuleTypes",
+  "method": "getModuleTypes",
+  "function": "openhab_module_types_getModuleTypes",
+  "stream": false,
+  "params": [
+   {
+    "name": "tags",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "typeFilter",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "ModuleTypes",
+  "method": "getModuleType",
+  "function": "openhab_module_types_getModuleType",
+  "stream": false,
+  "params": [
+   {
+    "name": "moduleTypeUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Persistence",
+  "method": "getServices",
+  "function": "openhab_persistence_getServices",
+  "stream": false,
+  "params": [
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Persistence",
+  "method": "getServiceConfiguration",
+  "function": "openhab_persistence_getServiceConfiguration",
+  "stream": false,
+  "params": [
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Persistence",
+  "method": "setServiceConfiguration",
+  "function": "openhab_persistence_setServiceConfiguration",
+  "stream": false,
+  "params": [
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "config",
+    "type": "json",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Persistence",
+  "method": "deleteServiceConfiguration",
+  "function": "openhab_persistence_deleteServiceConfiguration",
+  "stream": false,
+  "params": [
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Persistence",
+  "method": "getItemsFromService",
+  "function": "openhab_persistence_getItemsFromService",
+  "stream": false,
+  "params": [
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Persistence",
+  "method": "getItemPersistenceData",
+  "function": "openhab_persistence_getItemPersistenceData",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "startTime",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "endTime",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "page",
+    "type": "int",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "pageLength",
+    "type": "int",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "boundary",
+    "type": "bool",
+    "required": false,
+    "default": false
+   },
+   {
+    "name": "itemState",
+    "type": "bool",
+    "required": false,
+    "default": false
+   },
+   {
+    "name": "displayState",
+    "type": "bool",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Persistence",
+  "method": "storeItemData",
+  "function": "openhab_persistence_storeItemData",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "time",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "state",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Persistence",
+  "method": "deleteItemData",
+  "function": "openhab_persistence_deleteItemData",
+  "stream": false,
+  "params": [
+   {
+    "name": "itemName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "startTime",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "endTime",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "ProfileTypes",
+  "method": "getProfileTypes",
+  "function": "openhab_profile_types_getProfileTypes",
+  "stream": false,
+  "params": [
+   {
+    "name": "channelTypeUID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "itemType",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "getRules",
+  "function": "openhab_rules_getRules",
+  "stream": false,
+  "params": [
+   {
+    "name": "prefix",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "tags",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "summary",
+    "type": "bool",
+    "required": false,
+    "default": false
+   },
+   {
+    "name": "staticDataOnly",
+    "type": "bool",
+    "required": false,
+    "default": false
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "createRule",
+  "function": "openhab_rules_createRule",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleData",
+    "type": "json",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "getRule",
+  "function": "openhab_rules_getRule",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "updateRule",
+  "function": "openhab_rules_updateRule",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "ruleData",
+    "type": "json",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "deleteRule",
+  "function": "openhab_rules_deleteRule",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "getModule",
+  "function": "openhab_rules_getModule",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "moduleCategory",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "moduleID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "getModuleConfig",
+  "function": "openhab_rules_getModuleConfig",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "moduleCategory",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "moduleID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "getModuleConfigParam",
+  "function": "openhab_rules_getModuleConfigParam",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "moduleCategory",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "moduleID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "param",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "setModuleConfigParam",
+  "function": "openhab_rules_setModuleConfigParam",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "moduleCategory",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "moduleID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "param",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "value",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "getActions",
+  "function": "openhab_rules_getActions",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "getConditions",
+  "function": "openhab_rules_getConditions",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "getConfiguration",
+  "function": "openhab_rules_getConfiguration",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "updateConfiguration",
+  "function": "openhab_rules_updateConfiguration",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "configData",
+    "type": "json",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "setRuleState",
+  "function": "openhab_rules_setRuleState",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "enable",
+    "type": "bool",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "enable",
+  "function": "openhab_rules_enable",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "disable",
+  "function": "openhab_rules_disable",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "runNow",
+  "function": "openhab_rules_runNow",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "contextData",
+    "type": "json",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "getTriggers",
+  "function": "openhab_rules_getTriggers",
+  "stream": false,
+  "params": [
+   {
+    "name": "ruleUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Rules",
+  "method": "simulateSchedule",
+  "function": "openhab_rules_simulateSchedule",
+  "stream": false,
+  "params": [
+   {
+    "name": "fromTime",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "untilTime",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Services",
+  "method": "getServices",
+  "function": "openhab_services_getServices",
+  "stream": false,
+  "params": [
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Services",
+  "method": "getService",
+  "function": "openhab_services_getService",
+  "stream": false,
+  "params": [
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Services",
+  "method": "getServiceConfig",
+  "function": "openhab_services_getServiceConfig",
+  "stream": false,
+  "params": [
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Services",
+  "method": "updateServiceConfig",
+  "function": "openhab_services_updateServiceConfig",
+  "stream": false,
+  "params": [
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "configData",
+    "type": "json",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Services",
+  "method": "deleteServiceConfig",
+  "function": "openhab_services_deleteServiceConfig",
+  "stream": false,
+  "params": [
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Services",
+  "method": "getServiceContexts",
+  "function": "openhab_services_getServiceContexts",
+  "stream": false,
+  "params": [
+   {
+    "name": "serviceID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Sitemaps",
+  "method": "getSitemaps",
+  "function": "openhab_sitemaps_getSitemaps",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "Sitemaps",
+  "method": "getSitemap",
+  "function": "openhab_sitemaps_getSitemap",
+  "stream": false,
+  "params": [
+   {
+    "name": "sitemapName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "type",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "jsonCallback",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "includeHidden",
+    "type": "bool",
+    "required": false,
+    "default": false
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Sitemaps",
+  "method": "getSitemapPage",
+  "function": "openhab_sitemaps_getSitemapPage",
+  "stream": false,
+  "params": [
+   {
+    "name": "sitemapName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "pageID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "subscriptionID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "includeHidden",
+    "type": "bool",
+    "required": false,
+    "default": false
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Sitemaps",
+  "method": "getFullSitemap",
+  "function": "openhab_sitemaps_getFullSitemap",
+  "stream": false,
+  "params": [
+   {
+    "name": "sitemapName",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "subscriptionID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "includeHidden",
+    "type": "bool",
+    "required": false,
+    "default": false
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Sitemaps",
+  "method": "getSitemapEvents",
+  "function": "openhab_sitemaps_getSitemapEvents",
+  "stream": true,
+  "params": [
+   {
+    "name": "subscriptionID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "sitemapName",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "pageID",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Sitemaps",
+  "method": "getFullSitemapEvents",
+  "function": "openhab_sitemaps_getFullSitemapEvents",
+  "stream": true,
+  "params": [
+   {
+    "name": "subscriptionID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "sitemapName",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Sitemaps",
+  "method": "subscribeToSitemapEvents",
+  "function": "openhab_sitemaps_subscribeToSitemapEvents",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "Systeminfo",
+  "method": "getSystemInfo",
+  "function": "openhab_systeminfo_getSystemInfo",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "Systeminfo",
+  "method": "getUoMInfo",
+  "function": "openhab_systeminfo_getUoMInfo",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "Tags",
+  "method": "getTags",
+  "function": "openhab_tags_getTags",
+  "stream": false,
+  "params": [
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Tags",
+  "method": "createTag",
+  "function": "openhab_tags_createTag",
+  "stream": false,
+  "params": [
+   {
+    "name": "tagData",
+    "type": "json",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Tags",
+  "method": "getTag",
+  "function": "openhab_tags_getTag",
+  "stream": false,
+  "params": [
+   {
+    "name": "tagID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Tags",
+  "method": "updateTag",
+  "function": "openhab_tags_updateTag",
+  "stream": false,
+  "params": [
+   {
+    "name": "tagID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "tagData",
+    "type": "json",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Tags",
+  "method": "deleteTag",
+  "function": "openhab_tags_deleteTag",
+  "stream": false,
+  "params": [
+   {
+    "name": "tagID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Templates",
+  "method": "getTemplates",
+  "function": "openhab_templates_getTemplates",
+  "stream": false,
+  "params": [
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Templates",
+  "method": "getTemplate",
+  "function": "openhab_templates_getTemplate",
+  "stream": false,
+  "params": [
+   {
+    "name": "templateUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "ThingTypes",
+  "method": "getThingTypes",
+  "function": "openhab_thing_types_getThingTypes",
+  "stream": false,
+  "params": [
+   {
+    "name": "bindingID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "ThingTypes",
+  "method": "getThingType",
+  "function": "openhab_thing_types_getThingType",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingTypeUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Things",
+  "method": "getThings",
+  "function": "openhab_things_getThings",
+  "stream": false,
+  "params": [
+   {
+    "name": "summary",
+    "type": "bool",
+    "required": false,
+    "default": false
+   },
+   {
+    "name": "staticDataOnly",
+    "type": "bool",
+    "required": false,
+    "default": false
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Things",
+  "method": "createThing",
+  "function": "openhab_things_createThing",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingData",
+    "type": "json",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Things",
+  "method": "getThing",
+  "function": "openhab_things_getThing",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Things",
+  "method": "updateThing",
+  "function": "openhab_things_updateThing",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "thingData",
+    "type": "json",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Things",
+  "method": "deleteThing",
+  "function": "openhab_things_deleteThing",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "force",
+    "type": "bool",
+    "required": false,
+    "default": false
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Things",
+  "method": "updateThingConfiguration",
+  "function": "openhab_things_updateThingConfiguration",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "configurationData",
+    "type": "json",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Things",
+  "method": "getThingConfigStatus",
+  "function": "openhab_things_getThingConfigStatus",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Things",
+  "method": "setThingStatus",
+  "function": "openhab_things_setThingStatus",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "enabled",
+    "type": "bool",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Things",
+  "method": "enableThing",
+  "function": "openhab_things_enableThing",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Things",
+  "method": "disableThing",
+  "function": "openhab_things_disableThing",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Things",
+  "method": "updateThingFirmware",
+  "function": "openhab_things_updateThingFirmware",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "firmwareVersion",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Things",
+  "method": "getThingFirmwareStatus",
+  "function": "openhab_things_getThingFirmwareStatus",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Things",
+  "method": "getThingFirmwares",
+  "function": "openhab_things_getThingFirmwares",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Things",
+  "method": "getThingStatus",
+  "function": "openhab_things_getThingStatus",
+  "stream": false,
+  "params": [
+   {
+    "name": "thingUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Transformations",
+  "method": "getTransformations",
+  "function": "openhab_transformations_getTransformations",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "Transformations",
+  "method": "getTransformation",
+  "function": "openhab_transformations_getTransformation",
+  "stream": false,
+  "params": [
+   {
+    "name": "transformationUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Transformations",
+  "method": "updateTransformation",
+  "function": "openhab_transformations_updateTransformation",
+  "stream": false,
+  "params": [
+   {
+    "name": "transformationUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "transformationData",
+    "type": "json",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Transformations",
+  "method": "deleteTransformation",
+  "function": "openhab_transformations_deleteTransformation",
+  "stream": false,
+  "params": [
+   {
+    "name": "transformationUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Transformations",
+  "method": "getTransformationServices",
+  "function": "openhab_transformations_getTransformationServices",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "UI",
+  "method": "getUIComponents",
+  "function": "openhab_ui_getUIComponents",
+  "stream": false,
+  "params": [
+   {
+    "name": "namespace",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "summary",
+    "type": "bool",
+    "required": false,
+    "default": false
+   }
+  ]
+ },
+ {
+  "class": "UI",
+  "method": "addUIComponent",
+  "function": "openhab_ui_addUIComponent",
+  "stream": false,
+  "params": [
+   {
+    "name": "namespace",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "componentData",
+    "type": "json",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "UI",
+  "method": "getUIComponent",
+  "function": "openhab_ui_getUIComponent",
+  "stream": false,
+  "params": [
+   {
+    "name": "namespace",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "componentUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "UI",
+  "method": "updateUIComponent",
+  "function": "openhab_ui_updateUIComponent",
+  "stream": false,
+  "params": [
+   {
+    "name": "namespace",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "componentUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "componentData",
+    "type": "json",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "UI",
+  "method": "deleteUIComponent",
+  "function": "openhab_ui_deleteUIComponent",
+  "stream": false,
+  "params": [
+   {
+    "name": "namespace",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "componentUID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "UI",
+  "method": "getUITiles",
+  "function": "openhab_ui_getUITiles",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "UUID",
+  "method": "getUUID",
+  "function": "openhab_uuid_getUUID",
+  "stream": false,
+  "params": []
+ },
+ {
+  "class": "Voice",
+  "method": "getDefaultVoice",
+  "function": "openhab_voice_getDefaultVoice",
+  "stream": false,
+  "params": [
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Voice",
+  "method": "startDialog",
+  "function": "openhab_voice_startDialog",
+  "stream": false,
+  "params": [
+   {
+    "name": "sourceID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "ksID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "sttID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "ttsID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "voiceID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "hliIDs",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "sinkID",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "keyword",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "listeningItem",
+    "type": "str",
+    "required": false,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Voice",
+  "method": "stopDialog",
+  "function": "openhab_voice_stopDialog",
+  "stream": false,
+  "params": [
+   {
+    "name": "sourceID",
+    "type": "str",
+    "required": true,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Voice",
+  "method": "getInterpreters",
+  "function": "openhab_voice_getInterpreters",
+  "stream": false,
+  "params": [
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Voice",
+  "method": "interpretText",
+  "function": "openhab_voice_interpretText",
+  "stream": false,
+  "params": [
+   {
+    "name": "text",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Voice",
+  "method": "getInterpreter",
+  "function": "openhab_voice_getInterpreter",
+  "stream": false,
+  "params": [
+   {
+    "name": "interpreterID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Voice",
+  "method": "interpretTextBatch",
+  "function": "openhab_voice_interpretTextBatch",
+  "stream": false,
+  "params": [
+   {
+    "name": "text",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "IDs",
+    "type": "json",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Voice",
+  "method": "listenAndAnswer",
+  "function": "openhab_voice_listenAndAnswer",
+  "stream": false,
+  "params": [
+   {
+    "name": "sourceID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "sttID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "ttsID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "voiceID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "hliIDs",
+    "type": "json",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "sinkID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "listeningItem",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ },
+ {
+  "class": "Voice",
+  "method": "sayText",
+  "function": "openhab_voice_sayText",
+  "stream": false,
+  "params": [
+   {
+    "name": "text",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "voiceID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "sinkID",
+    "type": "str",
+    "required": true,
+    "default": null
+   },
+   {
+    "name": "volume",
+    "type": "str",
+    "required": false,
+    "default": "100"
+   }
+  ]
+ },
+ {
+  "class": "Voice",
+  "method": "getVoices",
+  "function": "openhab_voice_getVoices",
+  "stream": false,
+  "params": [
+   {
+    "name": "language",
+    "type": "str",
+    "required": false,
+    "default": null
+   }
+  ]
+ }
+]
